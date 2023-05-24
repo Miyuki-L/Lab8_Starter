@@ -65,10 +65,33 @@ describe('Basic user flow for Website', () => {
   // number in the top right has been correctly updated
   it('Checking number of items in cart on screen', async () => {
     console.log('Checking number of items in cart on screen...');
-    // TODO - Step 3
+    // Step 3
+    let shadowRoot;
+    let addButton;
+
     // Query select all of the <product-item> elements, then for every single product element
+    let prodItems = await page.$$('product-item');
+
+    //ONLY NEED TO ADD THE SECOND ITEM AND BEYOND BECAUSE IN PREVIOUS TEST ALREADY ADDED THE FIRST ITEM
+    for (let i = 1; i < prodItems.length; i++) {
     // get the shadowRoot and query select the button inside, and click on it.
-    // Check to see if the innerText of #cart-count is 20
+      console.log(`Adding product item ${i+1}/${prodItems.length}`);
+      
+      // Grab the shadowRoot of that element, then query a button from that shadowRoot.
+      shadowRoot = await prodItems[i].getProperty('shadowRoot');
+      addButton = await shadowRoot.$('button');
+
+      // Add if not already added
+      await addButton.click();  
+    }
+
+          
+    // Check to see if the innerText of #cart-count is 20  
+    const cartCount = await page.$('#cart-count');
+    const cartCountTextProperty = await cartCount.getProperty("innerText");
+    const cartCountText = await cartCountTextProperty.jsonValue();
+
+    expect(Number(cartCountText)).toBe(20);
   }, 10000);
 
   // Check to make sure that after you reload the page it remembers all of the items in your cart
