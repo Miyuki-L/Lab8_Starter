@@ -174,10 +174,29 @@ describe('Basic user flow for Website', () => {
   // after we refresh the page
   it('Checking number of items in cart on screen after reload', async () => {
     console.log('Checking number of items in cart on screen after reload...');
-    // TODO - Step 7
+    // Step 7
     // Reload the page once more, then go through each <product-item> to make sure that it has remembered nothing
+    await page.reload()
     // is in the cart - do this by checking the text on the buttons so that they should say "Add to Cart".
+    let prodItems = await page.$$('product-item');
+
+    for (let i=0; i < prodItems.length; i++) {
+      //Grab the button and remove the button from cart.
+      let shadowRoot = await prodItems[i].getProperty('shadowRoot');
+      let button = await shadowRoot.$('button');
+
+      let buttonTextProperty = await button.getProperty('innerText');
+      let buttonText = await buttonTextProperty.jsonValue();
+
+      expect(buttonText).toBe("Add to Cart");
+    }
+
     // Also check to make sure that #cart-count is still 0
+    let cartCount = await page.$("#cart-count");
+    let cartCountTextProperty = await cartCount.getProperty("innerText");
+    let cartCountText = await cartCountTextProperty.jsonValue();
+
+    expect(Number(cartCountText)).toBe(0);
   }, 10000);
 
   // Checking to make sure that localStorage for the cart is as we'd expect for the
