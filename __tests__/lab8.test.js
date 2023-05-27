@@ -72,7 +72,8 @@ describe('Basic user flow for Website', () => {
     // Query select all of the <product-item> elements, then for every single product element
     let prodItems = await page.$$('product-item');
 
-    //ONLY NEED TO ADD THE SECOND ITEM AND BEYOND BECAUSE IN PREVIOUS TEST ALREADY ADDED THE FIRST ITEM
+    // ONLY NEED TO ADD THE SECOND ITEM AND BEYOND BECAUSE IN PREVIOUS TEST ALREADY ADDED THE FIRST ITEM
+    // Tests in a suit are conducted in the same session so previous status is saved. 
     for (let i = 1; i < prodItems.length; i++) {
     // get the shadowRoot and query select the button inside, and click on it.
       console.log(`Adding product item ${i+1}/${prodItems.length}`);
